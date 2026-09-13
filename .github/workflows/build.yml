@@ -1,0 +1,28 @@
+name: Build Galaxia AutoHost
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Restore NuGet
+        run: nuget restore "GalaxiaFN AutoRestart.sln"
+
+      - name: Build
+        run: msbuild "GalaxiaFN AutoRestart.sln" /m /p:Configuration=Release /p:Platform=x64
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: GalaxiaFN-AutoHost
+          path: |
+            **/bin/Release/**
